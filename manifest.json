@@ -1,0 +1,11 @@
+{
+  "author": "mnaoumov",
+  "authorUrl": "https://github.com/mnaoumov/",
+  "description": "Finds hotkeys whose command no longer exists, and lets you remove, remap or keep each one.",
+  "fundingUrl": "https://www.buymeacoffee.com/mnaoumov",
+  "id": "hotkey-cleaner",
+  "isDesktopOnly": false,
+  "minAppVersion": "1.15.0",
+  "name": "Hotkey Cleaner",
+  "version": "0.0.0"
+}
