@@ -13,11 +13,11 @@ export class PluginSettingsTab extends PluginSettingsTabBase<PluginSettings> {
   protected override getSettingDefinitionItems(): SettingDefinitionItem[] {
     return [
       this.settingEx({
-        desc: 'Text setting description.',
-        name: 'Text setting name',
+        desc: 'When Obsidian starts, look for hotkeys whose command no longer exists, and show a notice when there are any. The review itself is always opened by the Review stale hotkeys command.',
+        name: 'Check on startup',
         render: (setting) => {
-          setting.addText((text) => {
-            this.bind({ propertyName: 'textSetting', valueComponent: text });
+          setting.addToggle((toggle) => {
+            this.bind({ propertyName: 'shouldCheckOnStartup', valueComponent: toggle });
           });
         }
       })

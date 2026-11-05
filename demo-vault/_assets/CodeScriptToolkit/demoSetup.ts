@@ -1,13 +1,10 @@
 import type {
   App,
-  TFile
+  Hotkey
 } from 'obsidian';
 
 import { configureCommunityPlugin } from '@mnaoumov/obsidian-lib/community-plugins';
-import {
-  MarkdownView,
-  Notice
-} from 'obsidian';
+import { Notice } from 'obsidian';
 
 // Shared code for every `code-button` in this vault, so each note's button stays a one-liner instead of a
 // Block copy-pasted across notes.
@@ -15,73 +12,58 @@ import {
 // The plugin id has to match `manifest.json` exactly: commands are keyed by it, and so is `data.json`.
 const PLUGIN_ID = 'hotkey-cleaner';
 
-const SCRATCH_NOTE_PATH = 'Materials/01 Sample commands/Scratch note.md';
+/**
+ * The stale bindings the demo plants, one of each kind the plugin can demonstrate in this vault.
+ *
+ * - A command of a plugin that is not installed at all.
+ * - A command id this plugin no longer has, one letter short of the real `review-stale-hotkeys`, which the
+ *   Review offers as its successor.
+ */
+const PLANTED_HOTKEYS: Readonly<Record<string, Hotkey[]>> = {
+  [`${PLUGIN_ID}:review-stale-hotkey`]: [{ key: 'F8', modifiers: ['Alt'] }],
+  'uninstalled-demo-plugin:run': [{ key: 'P', modifiers: ['Mod'] }]
+};
 
-const DEFAULT_TEXT_SETTING = 'defaultText';
+const REVIEW_COMMAND_ID = `${PLUGIN_ID}:review-stale-hotkeys`;
 
 /**
- * Runs the plugin's `Sample` command, which shows a notice.
+ * Writes the demo's stale bindings into `hotkeys.json` and opens the review.
  *
- * Manual equivalent: `Hotkey Cleaner: Sample` in the Command Palette.
+ * Manual equivalent: none is needed in a real vault, which collects stale bindings by itself as plugins are
+ * removed and renamed. Then run `Hotkey Cleaner: Review stale hotkeys` in the Command Palette.
  */
-export function runSampleCommand(app: App): void {
-  app.commands.executeCommandById(`${PLUGIN_ID}:sample`);
-}
-
-/**
- * Opens the scratch note in editing mode and runs the plugin's `Sample editor` command against it.
- *
- * The command is an editor command, so it needs a live editor -- and this vault opens notes in reading
- * view, where there is none. Opening the scratch note in Source mode first is what a reader would do by
- * hand before running the command.
- *
- * Manual equivalent: open `Scratch note`, switch it to Source mode, put the cursor where you want the text,
- * and run `Hotkey Cleaner: Sample editor` in the Command Palette.
- */
-export async function runSampleEditorCommandOnScratchNote(app: App): Promise<void> {
-  const scratchNote = await ensureScratchNote(app);
-  const leaf = app.workspace.getLeaf(false);
-  await leaf.openFile(scratchNote, { state: { mode: 'source' } });
-
-  const view = app.workspace.getActiveViewOfType(MarkdownView);
-  if (!view) {
-    new Notice('Could not open the scratch note in editing mode.');
-    return;
+export function plantStaleHotkeysAndReview(app: App): void {
+  for (const [commandId, hotkeys] of Object.entries(PLANTED_HOTKEYS)) {
+    app.hotkeyManager.setHotkeys(commandId, hotkeys);
   }
-
-  view.editor.setCursor(view.editor.lastLine());
-  app.commands.executeCommandById(`${PLUGIN_ID}:sample-editor`);
-  new Notice('Ran the Sample editor command. Look at the end of the scratch note.');
+  app.hotkeyManager.save();
+  app.commands.executeCommandById(REVIEW_COMMAND_ID);
 }
 
 /**
- * Sets the plugin's `textSetting` to the given value.
+ * Removes whatever the demo planted, and anything it moved onto `Review stale hotkeys`, so exploring the
+ * vault leaves its hotkeys as you found them.
+ *
+ * Manual equivalent: clear the same bindings in **Settings -> Hotkeys**.
+ */
+export function removePlantedHotkeys(app: App): void {
+  for (const commandId of [...Object.keys(PLANTED_HOTKEYS), REVIEW_COMMAND_ID]) {
+    app.hotkeyManager.removeHotkeys(commandId);
+  }
+  app.hotkeyManager.save();
+  new Notice('The demo hotkeys are gone.');
+}
+
+/**
+ * Turns the startup check on or off.
  *
  * `configureCommunityPlugin` routes through the plugin's own settings component while it is loaded, so the
  * change applies live -- no window reload, and no writing `data.json` behind a running plugin's back, which
  * it would overwrite from memory as it unloads.
  *
- * Manual equivalent: change the same field in **Settings -> Community plugins -> Hotkey Cleaner**.
+ * Manual equivalent: the **Check on startup** toggle in **Settings -> Community plugins -> Hotkey Cleaner**.
  */
-export async function setTextSetting(app: App, value: string): Promise<void> {
-  await configureCommunityPlugin({ app, pluginId: PLUGIN_ID, settings: { textSetting: value } });
-  new Notice(`textSetting is now "${value}". It is live -- no reload needed.`);
-}
-
-/**
- * Puts `textSetting` back to the value a fresh install starts with, so exploring this note leaves the vault
- * as you found it.
- *
- * Manual equivalent: type the default back into the same field in the settings tab.
- */
-export async function resetTextSetting(app: App): Promise<void> {
-  await setTextSetting(app, DEFAULT_TEXT_SETTING);
-}
-
-async function ensureScratchNote(app: App): Promise<TFile> {
-  const existing = app.vault.getFileByPath(SCRATCH_NOTE_PATH);
-  if (existing) {
-    return existing;
-  }
-  return await app.vault.create(SCRATCH_NOTE_PATH, '# Scratch note\n\nRun the Sample editor command here.\n');
+export async function setCheckOnStartup(app: App, value: boolean): Promise<void> {
+  await configureCommunityPlugin({ app, pluginId: PLUGIN_ID, settings: { shouldCheckOnStartup: value } });
+  new Notice(`shouldCheckOnStartup is now ${String(value)}. It is live -- no reload needed.`);
 }

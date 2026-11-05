@@ -4,6 +4,10 @@
 
 Finds hotkeys whose command no longer exists, and lets you remove, remap or keep each one.
 
+Obsidian keeps every hotkey you assign in `hotkeys.json`, keyed by command id. When a plugin is uninstalled, or renames a command, its bindings stay behind, and the Hotkeys tab cannot show them because it lists only commands that exist. A stale binding can still hold a key another command wants.
+
+Run **`Hotkey Cleaner`: Review stale hotkeys**. It checks every binding against the commands Obsidian has actually registered, and lists the ones that cannot fire: a plugin that is not installed, a command an enabled plugin no longer has, and a plugin or core plugin that is turned off. For each one you choose **Remove**, **Keep**, or **Move** its keys to the command it was most likely renamed to. Nothing is written until you press **Apply**. With **Check on startup** on, a notice tells you when there is something to review.
+
 ## Demo vault
 
 **The documentation is a demo vault.** Every feature has a note that explains what it does and why you would want it, with a button you can press to watch it happen.
@@ -24,7 +28,13 @@ A copy of the vault ships with every release. You can access it via any of the f
 <!-- Use these columns: Plugin | Features | How `Hotkey Cleaner` differs. Keep cells short, with semicolon-separated fragments. Start each difference with the relationship to the other plugin, then what this one adds or omits. Use Supersedes for a retired or fully covered plugin, Extends for an active plugin it builds on, or a concrete relation such as Same goal as or Narrower than. -->
 <!-- Close a populated table with "Last searched for similar plugins on YYYY-MM-DD." When the search finds nothing, keep the sentence below and replace its date. The resources link stays first in either case. -->
 
-No similar plugin was found when this was last searched for, on YYYY-MM-DD.
+| Plugin | Features | How `Hotkey Cleaner` differs |
+| --- | --- | --- |
+| [Hotkey Helper](https://community.obsidian.md/plugins/hotkey-helper) | Hotkey and settings buttons on plugin tabs; counts of assigned and conflicting hotkeys | Complements it; sees bindings to commands that no longer exist, which Hotkey Helper never counts |
+| [Hotkeys Cheatsheet](https://community.obsidian.md/plugins/hotkeys-cheatsheet) | Lists every hotkey, grouped by plugin | Narrower than it; flags the stale entries it lists under their raw ids, and removes or moves them |
+| [Keyboard Analyzer](https://community.obsidian.md/plugins/keyboard-analyzer) | Visual keyboard; duplicate detection; hotkey editor | Complements it; works on bindings whose command is gone, which its command index cannot see |
+
+Last searched for similar plugins on 2026-10-31.
 
 ## Installation
 

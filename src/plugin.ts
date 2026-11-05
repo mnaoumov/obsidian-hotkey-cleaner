@@ -1,15 +1,15 @@
-import type { Editor } from 'obsidian';
-
 import { OpenBugReportCommandHandler } from '@mnaoumov/obsidian-lib/command-handlers/open-bug-report-command-handler';
 import { OpenDemoVaultCommandHandler } from '@mnaoumov/obsidian-lib/command-handlers/open-demo-vault-command-handler';
+import { CallbackLayoutReadyComponent } from '@mnaoumov/obsidian-lib/components/layout-ready-component';
 import { PluginSettingsTabComponent } from '@mnaoumov/obsidian-lib/components/plugin-settings-tab-component';
 import { PluginDataHandler } from '@mnaoumov/obsidian-lib/data-handler';
 import { PluginBase } from '@mnaoumov/obsidian-lib/plugin/plugin';
 import { PluginEventSourceImpl } from '@mnaoumov/obsidian-lib/plugin/plugin-event-source';
-import { Notice } from 'obsidian';
 
 import { PluginSettingsComponent } from './plugin-settings-component.ts';
 import { PluginSettingsTab } from './plugin-settings-tab.ts';
+import { ReviewStaleHotkeysCommandHandler } from './review-stale-hotkeys-command-handler.ts';
+import { StaleHotkeysReviewer } from './stale-hotkeys-reviewer.ts';
 
 export class Plugin extends PluginBase {
   protected override async onloadImpl(): Promise<void> {
@@ -31,23 +31,23 @@ export class Plugin extends PluginBase {
       })
     );
 
-    this.addCommand({
-      callback: this.runSampleCommand.bind(this),
-      id: 'sample',
-      name: 'Sample'
+    const reviewer = new StaleHotkeysReviewer({
+      app: this.app,
+      pluginNoticeComponent: this.pluginNoticeComponent
     });
 
-    this.addCommand({
-      editorCallback: this.runSampleEditorCommand.bind(this),
-      id: 'sample-editor',
-      name: 'Sample editor'
-    });
+    // Every plugin has registered its commands by the time the layout is ready, so a binding that is still
+    // Unresolved then is stale rather than early.
+    this.addChild(
+      new CallbackLayoutReadyComponent(this.app, () => {
+        if (pluginSettingsComponent.settings.shouldCheckOnStartup) {
+          reviewer.notifyIfStale();
+        }
+      })
+    );
 
-    // `OpenDemoVaultCommandHandler` is what makes the README's first demo-vault route real: it downloads
-    // The `<plugin-id>-demo-vault.zip` attached to the GitHub release and opens it as a vault in
-    // A new window. It is not registered automatically -- a demo vault without this command can only be
-    // Reached by downloading the asset by hand. It hides itself on mobile, so no platform guard is needed.
     await this.commandHandlerComponent.registerCommandHandlers(() => [
+      new ReviewStaleHotkeysCommandHandler(reviewer),
       // `OpenBugReportCommandHandler` opens the bug form in `.github/ISSUE_TEMPLATE/` with the plugin version, the
       // Obsidian version and the operating system already filled in, which is why it is registered only with the forms.
       new OpenBugReportCommandHandler({
@@ -62,13 +62,5 @@ export class Plugin extends PluginBase {
         pluginVersion: this.manifest.version
       })
     ]);
-  }
-
-  private runSampleCommand(): void {
-    new Notice('Sample command');
-  }
-
-  private runSampleEditorCommand(editor: Editor): void {
-    editor.replaceSelection('Sample Editor Command');
   }
 }
