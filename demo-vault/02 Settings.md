@@ -6,8 +6,8 @@ Find them in Obsidian under **Settings → Community plugins → `Hotkey Cleaner
 
 ## General
 
-- `textSetting`
-  - free text, shown in the settings tab as **Text setting name**. The scaffolded sample setting; nothing reads it yet.
+- `shouldCheckOnStartup`
+  - on or off, shown in the settings tab as **Check on startup**. On by default. When Obsidian starts and its layout is ready, the plugin looks for stale bindings and shows a notice when it finds any. It never changes anything by itself: the review is always opened by the **Review stale hotkeys** command.
 
 ## Try it
 
@@ -15,26 +15,20 @@ Change the setting without leaving this note. The change applies live — the pl
 
 ```code-button
 ---
-caption: Set textSetting to "changed by the demo"
+caption: Turn the startup check off
 ---
-await require('/demoSetup.ts').setTextSetting(app, 'changed by the demo');
+await require('/demoSetup.ts').setCheckOnStartup(app, false);
 ```
 
-Manual equivalent: type the same value into **Text setting name** in the settings tab.
+Manual equivalent: switch off **Check on startup** in the settings tab.
 
-Open the settings tab now and the field shows the new value. When you are done, put it back:
+When you are done, put it back:
 
 ```code-button
 ---
-caption: Reset textSetting to its default
+caption: Turn the startup check back on
 ---
-await require('/demoSetup.ts').resetTextSetting(app);
+await require('/demoSetup.ts').setCheckOnStartup(app, true);
 ```
 
-Manual equivalent: type `defaultText` back into the field.
-
-## Adding your own
-
-Settings are declared as plain properties on the `PluginSettings` class in `src/plugin-settings.ts`; the property's initial value **is** its default. `src/plugin-settings-tab.ts` renders one row per setting, and `src/plugin-settings-component.ts` is where migrations and validators go.
-
-When you add one, add it to this note too. The demo-vault coverage suite can be told to fail the build when a setting is documented nowhere — see the commented reflection spec in `src/demo-vault.no-app.integration.test.ts`.
+Manual equivalent: switch **Check on startup** back on.
