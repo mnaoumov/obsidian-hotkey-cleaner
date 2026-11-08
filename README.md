@@ -8,6 +8,10 @@ Obsidian keeps every hotkey you assign in `hotkeys.json`, keyed by command id. W
 
 Run **`Hotkey Cleaner`: Review stale hotkeys**. It checks every binding against the commands Obsidian has actually registered, and lists the ones that cannot fire: a plugin that is not installed, a command an enabled plugin no longer has, and a plugin or core plugin that is turned off. For each one you choose **Remove**, **Keep**, or **Move** its keys to the command it was most likely renamed to. Nothing is written until you press **Apply**. With **Check on startup** on, a notice tells you when there is something to review.
 
+![The review modal listing every hotkey that cannot fire, and why](./images/screenshots/screenshot-desktop-1.png)
+
+![Moving a renamed command's keys to its new id](./images/screenshots/screenshot-desktop-2.png)
+
 ## Demo vault
 
 **The documentation is a demo vault.** Every feature has a note that explains what it does and why you would want it, with a button you can press to watch it happen.
