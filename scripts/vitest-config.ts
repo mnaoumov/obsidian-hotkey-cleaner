@@ -21,6 +21,14 @@ const DEMO_VAULT_TEST_FILES = 'src/**/*.demo-vault.integration.test.ts';
 const DEMO_VAULT_TIMEOUT_IN_MILLISECONDS = 600_000;
 
 /**
+ * The listing frames. Named `*.desktop-capture.` so no standard project collects them: capturing is an
+ * explicit operation (`npm run capture:screenshots`).
+ */
+const DESKTOP_CAPTURE_TEST_FILES = 'src/**/*.desktop-capture.integration.test.ts';
+
+const CAPTURE_TIMEOUT_IN_MILLISECONDS = 300_000;
+
+/**
  * Where every `.svelte` / `.vue` import in a unit test's module graph is sent. Compiling a single-file
  * component is the bundler's job, and the plugin that does it is a dependency only of the bundler that
  * was chosen — so a unit test that imports the plugin's own code would otherwise fail on a file vitest
@@ -47,6 +55,14 @@ const STYLESHEET_STUB_PATH = fileURLToPath(new URL('stylesheet-stub.ts', import.
 export const config = defineObsidianPluginVitestConfig({
   customProjects(context: ObsidianPluginVitestConfigContext): TestProjectConfiguration[] {
     return [
+      {
+        test: {
+          ...context.desktop,
+          include: [DESKTOP_CAPTURE_TEST_FILES],
+          name: 'capture-screenshots:desktop',
+          testTimeout: CAPTURE_TIMEOUT_IN_MILLISECONDS
+        }
+      },
       {
         test: {
           ...context.desktop,
