@@ -1,6 +1,6 @@
 {
   "name": "hotkey-cleaner",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Finds hotkeys whose command no longer exists, and lets you remove, remap or keep each one.",
   "type": "module",
   "main": "main.js",
