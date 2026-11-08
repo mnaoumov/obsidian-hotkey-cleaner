@@ -12,4 +12,6 @@ Built-in prefixes (`app`, `editor`, `markdown`, `theme`, `window`, `workspace`),
 
 ## Validation
 
-The standard gate, the desktop integration suite (`review-stale-hotkeys.desktop.integration.test.ts` drives the real modal) and the demo-vault button suite. The demo-vault suite needs `fix-require-modules` in `demo-vault/.obsidian/plugins/`; its setup error prints the `bootstrap-demo-vault` command that installs it.
+The standard gate, the desktop integration suite (`review-stale-hotkeys.desktop.integration.test.ts` drives the real modal) and the demo-vault button suite. The demo-vault suite needs `fix-require-modules` in `demo-vault/.obsidian/plugins/`; its setup error prints the `bootstrap-demo-vault` command that installs it. The plugin has no Android suite, so `test:integration:android` finds no test files.
+
+`npm run capture:screenshots` re-takes the desktop frames in `images/screenshots/`; run `npm run build` first. The generated `test:integration` aggregate leaves out the desktop suite, so `npm run version` does not run it: run `test:integration:desktop` by hand before a release.
