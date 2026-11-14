@@ -6,7 +6,7 @@ The **`Hotkey Cleaner`: Review stale hotkeys** command lists every binding in `h
 ---
 caption: Plant two stale hotkeys and open the review
 ---
-require('/demoSetup.ts').plantStaleHotkeysAndReview(app);
+await require('/demoSetup.ts').plantStaleHotkeysAndReview(app);
 ```
 
 Manual equivalent: run **`Hotkey Cleaner`: Review stale hotkeys** in the Command Palette (`Ctrl+P` / `Cmd+P`). In your own vault there is nothing to plant: removing a plugin, or updating one that renamed a command, leaves its bindings behind by itself.
@@ -40,7 +40,7 @@ In the demo above, pick **Move to Review stale hotkeys** for `hotkey-cleaner:rev
 ---
 caption: Remove the demo hotkeys
 ---
-require('/demoSetup.ts').removePlantedHotkeys(app);
+await require('/demoSetup.ts').removePlantedHotkeys(app);
 ```
 
 Manual equivalent: clear the same bindings in **Settings → Hotkeys**.

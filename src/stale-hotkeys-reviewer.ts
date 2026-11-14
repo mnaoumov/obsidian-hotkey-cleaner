@@ -39,14 +39,14 @@ export class StaleHotkeysReviewer {
    * @param staleHotkeys - The stale bindings the decisions are about.
    * @param decisions - The decisions.
    */
-  public applyDecisions(staleHotkeys: readonly StaleHotkey[], decisions: readonly HotkeyDecision[]): void {
+  public async applyDecisions(staleHotkeys: readonly StaleHotkey[], decisions: readonly HotkeyDecision[]): Promise<void> {
     const plan = planHotkeyChanges(staleHotkeys, decisions, readHotkeyAnalysisInput(this.app));
     if (plan.removedCommandIds.length === 0) {
       this.pluginNoticeComponent.showNotice('No hotkeys were changed.');
       return;
     }
 
-    applyHotkeyChangePlan(this.app, plan);
+    await applyHotkeyChangePlan(this.app, plan);
     const remappedCount = decisions.filter((decision) => decision.action === 'remap').length;
     const removedCount = plan.removedCommandIds.length - remappedCount;
     this.pluginNoticeComponent.showNotice(`Removed ${String(removedCount)} and moved ${String(remappedCount)} stale hotkey binding(s).`);
@@ -90,8 +90,8 @@ export class StaleHotkeysReviewer {
     const modal = new StaleHotkeysModal({
       app: this.app,
       getCommandName: (commandId): string | undefined => commandNames.get(commandId),
-      onApply: (decisions): void => {
-        this.applyDecisions(staleHotkeys, decisions);
+      onApply: async (decisions): Promise<void> => {
+        await this.applyDecisions(staleHotkeys, decisions);
       },
       staleHotkeys
     });

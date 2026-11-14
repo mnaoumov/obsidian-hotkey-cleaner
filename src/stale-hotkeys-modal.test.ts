@@ -1,3 +1,4 @@
+import { noopAsync } from '@mnaoumov/typescript-lib/function';
 import { App } from 'obsidian-test-mocks/obsidian';
 import {
   describe,
@@ -54,7 +55,7 @@ const STALE_HOTKEYS: StaleHotkey[] = [
   }
 ];
 
-function createModal(onApply: (decisions: HotkeyDecision[]) => void): StaleHotkeysModal {
+function createModal(onApply: (decisions: HotkeyDecision[]) => Promise<void>): StaleHotkeysModal {
   const names: Record<string, string> = { 'live:command': 'Live', 'ocst:new': 'New' };
   return new StaleHotkeysModal({
     app: App.createConfigured__().asOriginalType__(),
@@ -99,7 +100,9 @@ describe('StaleHotkeysModal', () => {
   });
 
   it('applies the choices made in the dropdowns and closes', () => {
-    const onApply = vi.fn();
+    const onApply = vi.fn(async (): Promise<void> => {
+      await noopAsync();
+    });
     const modal = createModal(onApply);
     modal.open();
     const selects = modal.contentEl.querySelectorAll('select');
@@ -126,7 +129,9 @@ describe('StaleHotkeysModal', () => {
   });
 
   it('closes without applying on Cancel', () => {
-    const onApply = vi.fn();
+    const onApply = vi.fn(async (): Promise<void> => {
+      await noopAsync();
+    });
     const modal = createModal(onApply);
     modal.open();
     getButton(modal, 'Cancel').click();
