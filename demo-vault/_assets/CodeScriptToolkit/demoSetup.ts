@@ -32,11 +32,11 @@ const REVIEW_COMMAND_ID = `${PLUGIN_ID}:review-stale-hotkeys`;
  * Manual equivalent: none is needed in a real vault, which collects stale bindings by itself as plugins are
  * removed and renamed. Then run `Hotkey Cleaner: Review stale hotkeys` in the Command Palette.
  */
-export function plantStaleHotkeysAndReview(app: App): void {
+export async function plantStaleHotkeysAndReview(app: App): Promise<void> {
   for (const [commandId, hotkeys] of Object.entries(PLANTED_HOTKEYS)) {
     app.hotkeyManager.setHotkeys(commandId, hotkeys);
   }
-  app.hotkeyManager.save();
+  await app.hotkeyManager.save();
   app.commands.executeCommandById(REVIEW_COMMAND_ID);
 }
 
@@ -46,11 +46,11 @@ export function plantStaleHotkeysAndReview(app: App): void {
  *
  * Manual equivalent: clear the same bindings in **Settings -> Hotkeys**.
  */
-export function removePlantedHotkeys(app: App): void {
+export async function removePlantedHotkeys(app: App): Promise<void> {
   for (const commandId of [...Object.keys(PLANTED_HOTKEYS), REVIEW_COMMAND_ID]) {
     app.hotkeyManager.removeHotkeys(commandId);
   }
-  app.hotkeyManager.save();
+  await app.hotkeyManager.save();
   new Notice('The demo hotkeys are gone.');
 }
 

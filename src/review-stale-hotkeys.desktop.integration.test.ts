@@ -52,7 +52,7 @@ describe('Review stale hotkeys', () => {
           for (const id of [missingPluginId, renamedId, successorId]) {
             app.hotkeyManager.removeHotkeys(id);
           }
-          app.hotkeyManager.save();
+          await app.hotkeyManager.save();
         }
       },
       vaultPath: getTemporaryVault().path

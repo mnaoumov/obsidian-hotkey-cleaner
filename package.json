@@ -56,7 +56,7 @@
     "@mnaoumov/typescript-dev-toolkit": "^6.4.1",
     "@mnaoumov/typescript-lib": "^2.0.0",
     "@mnaoumov/typescript-test-toolkit": "^1.0.3",
-    "@obsidian-typings/obsidian-public-latest": "^6.59.0",
+    "@obsidian-typings/obsidian-public-latest": "^6.60.0",
     "@tsconfig/strictest": "^2.0.8",
     "@types/node": "^26.6.6",
     "@vitest/coverage-v8": "^5.1.0",

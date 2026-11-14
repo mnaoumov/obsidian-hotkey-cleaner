@@ -12,7 +12,7 @@ Below this paragraph is a **code button** — a captioned rectangle. It is not a
 ---
 caption: Plant two stale hotkeys and open the review
 ---
-require('/demoSetup.ts').plantStaleHotkeysAndReview(app);
+await require('/demoSetup.ts').plantStaleHotkeysAndReview(app);
 ```
 
 A window titled **Stale hotkeys** should have opened, listing one binding of a plugin that is not installed and one binding of a command this plugin no longer has. That is the **`Hotkey Cleaner`: Review stale hotkeys** command, the same one you can run from the Command Palette (`Ctrl+P` / `Cmd+P`).

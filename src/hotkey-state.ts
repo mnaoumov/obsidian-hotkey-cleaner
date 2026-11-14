@@ -11,7 +11,7 @@ import type {
  * @param app - The app.
  * @param plan - The plan.
  */
-export function applyHotkeyChangePlan(app: App, plan: HotkeyChangePlan): void {
+export async function applyHotkeyChangePlan(app: App, plan: HotkeyChangePlan): Promise<void> {
   for (const commandId of plan.removedCommandIds) {
     app.hotkeyManager.removeHotkeys(commandId);
   }
@@ -20,8 +20,7 @@ export function applyHotkeyChangePlan(app: App, plan: HotkeyChangePlan): void {
     app.hotkeyManager.setHotkeys(commandId, [...hotkeys]);
   }
 
-  // TODO: Await this once obsidian-typings types `HotkeyManager.save` as returning the promise Obsidian 1.15 returns.
-  app.hotkeyManager.save();
+  await app.hotkeyManager.save();
 }
 
 /**

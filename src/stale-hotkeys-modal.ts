@@ -1,5 +1,6 @@
 import type { App } from 'obsidian';
 
+import { convertAsyncToSync } from '@mnaoumov/typescript-lib/async';
 import {
   Modal,
   Setting
@@ -27,7 +28,7 @@ const REASON_TEXTS: Readonly<Record<StaleHotkeyReason, string>> = {
 interface StaleHotkeysModalConstructorParams {
   readonly app: App;
   readonly getCommandName: (commandId: string) => string | undefined;
-  readonly onApply: (decisions: HotkeyDecision[]) => void;
+  readonly onApply: (decisions: HotkeyDecision[]) => Promise<void>;
   readonly staleHotkeys: readonly StaleHotkey[];
 }
 
@@ -48,7 +49,7 @@ class StaleHotkeyRow {
  */
 export class StaleHotkeysModal extends Modal {
   private readonly getCommandName: (commandId: string) => string | undefined;
-  private readonly onApply: (decisions: HotkeyDecision[]) => void;
+  private readonly onApply: (decisions: HotkeyDecision[]) => Promise<void>;
   private readonly rows: readonly StaleHotkeyRow[];
 
   public constructor(params: StaleHotkeysModalConstructorParams) {
@@ -89,10 +90,11 @@ export class StaleHotkeysModal extends Modal {
         });
       })
       .addButton((button) => {
-        button.setButtonText('Apply').setCta().onClick(() => {
-          this.onApply(this.getDecisions());
+        button.setButtonText('Apply').setCta().onClick(convertAsyncToSync(async () => {
+          const decisions = this.getDecisions();
           this.close();
-        });
+          await this.onApply(decisions);
+        }));
       });
   }
 

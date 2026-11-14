@@ -5,6 +5,7 @@ import type {
   Notice
 } from 'obsidian';
 
+import { noopAsync } from '@mnaoumov/typescript-lib/function';
 import { strictProxy } from '@mnaoumov/typescript-test-toolkit/strict-proxy';
 import { App } from 'obsidian-test-mocks/obsidian';
 import {
@@ -38,8 +39,9 @@ function createFixture(customKeys: Record<string, Hotkey[]>): Fixture {
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- The fake mirrors the real manager, which deletes the entry.
         delete customKeys[commandId];
       },
-      save: (): void => {
+      save: async (): Promise<void> => {
         saves.push(saves.length);
+        await noopAsync();
       },
       setHotkeys: (commandId: string, hotkeys: Hotkey[]): void => {
         customKeys[commandId] = hotkeys;
@@ -68,7 +70,7 @@ describe('StaleHotkeysReviewer', () => {
     expect(fixture.notices).toEqual(['Every hotkey binding points at a command that exists.']);
   });
 
-  it('opens the review, and Apply removes and remaps through the hotkey manager', () => {
+  it('opens the review, and Apply removes and remaps through the hotkey manager', async () => {
     const fixture = createFixture({ 'ocst:invokeOld': [ALT_C], 'ocst:new-command': [ALT_C], 'quickadd:run': [ALT_C] });
     const modal = fixture.reviewer.review();
     expect(modal?.contentEl.textContent).toContain('3 hotkey binding(s)');
@@ -76,7 +78,7 @@ describe('StaleHotkeysReviewer', () => {
     const options = [...modal?.contentEl.querySelectorAll('option') ?? []].map((option) => option.text);
     expect(options).toContain('Move to New (ocst:new)');
 
-    fixture.reviewer.applyDecisions(fixture.reviewer.findStaleHotkeys(), [
+    await fixture.reviewer.applyDecisions(fixture.reviewer.findStaleHotkeys(), [
       { action: 'keep', commandId: 'ocst:invokeOld' },
       { action: 'remap', commandId: 'ocst:new-command', targetCommandId: 'ocst:new' },
       { action: 'remove', commandId: 'quickadd:run' }
@@ -87,12 +89,16 @@ describe('StaleHotkeysReviewer', () => {
     expect(fixture.notices).toEqual(['Removed 1 and moved 1 stale hotkey binding(s).']);
   });
 
-  it('applies through the modal Apply button', () => {
+  it('applies through the modal Apply button', async () => {
     const fixture = createFixture({ 'quickadd:run': [ALT_C] });
     const modal = fixture.reviewer.review();
     const apply = [...modal?.contentEl.querySelectorAll('button') ?? []].find((button) => button.textContent === 'Apply');
     apply?.click();
+    await vi.waitFor(() => {
+      expect(fixture.notices).toEqual(['Removed 1 and moved 0 stale hotkey binding(s).']);
+    });
     expect(fixture.customKeys).toEqual({});
+    expect(fixture.saves).toHaveLength(1);
   });
 
   it('notifies at startup only when something is stale', () => {
@@ -105,9 +111,9 @@ describe('StaleHotkeysReviewer', () => {
     expect(stale.notices).toEqual(['1 hotkey binding(s) point at commands that cannot run. Run the Review stale hotkeys command to clean them up.']);
   });
 
-  it('writes nothing when every decision is keep', () => {
+  it('writes nothing when every decision is keep', async () => {
     const fixture = createFixture({ 'quickadd:run': [ALT_C] });
-    fixture.reviewer.applyDecisions(fixture.reviewer.findStaleHotkeys(), [{ action: 'keep', commandId: 'quickadd:run' }]);
+    await fixture.reviewer.applyDecisions(fixture.reviewer.findStaleHotkeys(), [{ action: 'keep', commandId: 'quickadd:run' }]);
     expect(fixture.saves).toHaveLength(0);
     expect(fixture.notices).toEqual(['No hotkeys were changed.']);
   });

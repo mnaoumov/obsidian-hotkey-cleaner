@@ -1,5 +1,6 @@
 import type { App } from 'obsidian';
 
+import { noopAsync } from '@mnaoumov/typescript-lib/function';
 import { strictProxy } from '@mnaoumov/typescript-test-toolkit/strict-proxy';
 import {
   describe,
@@ -52,7 +53,7 @@ describe('readHotkeyAnalysisInput', () => {
 });
 
 describe('applyHotkeyChangePlan', () => {
-  it('removes, sets and then saves through the hotkey manager', () => {
+  it('removes, sets and then saves through the hotkey manager', async () => {
     const calls: string[] = [];
     const hotkey = { key: 'c', modifiers: [] };
     const app = strictProxy<App>({
@@ -60,8 +61,9 @@ describe('applyHotkeyChangePlan', () => {
         removeHotkeys: vi.fn((commandId: string) => {
           calls.push(`remove ${commandId}`);
         }),
-        save: vi.fn(() => {
+        save: vi.fn(async () => {
           calls.push('save');
+          await noopAsync();
         }),
         setHotkeys: vi.fn((commandId: string) => {
           calls.push(`set ${commandId}`);
@@ -69,7 +71,7 @@ describe('applyHotkeyChangePlan', () => {
       }
     });
 
-    applyHotkeyChangePlan(app, { removedCommandIds: ['a:b'], updatedHotkeys: { 'c:d': [hotkey] } });
+    await applyHotkeyChangePlan(app, { removedCommandIds: ['a:b'], updatedHotkeys: { 'c:d': [hotkey] } });
 
     expect(calls).toEqual(['remove a:b', 'set c:d', 'save']);
     expect(app.hotkeyManager.setHotkeys).toHaveBeenCalledWith('c:d', [hotkey]);
