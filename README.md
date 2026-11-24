@@ -42,7 +42,7 @@ Last searched for similar plugins on 2026-10-31.
 
 ## Installation
 
-The plugin is not available in [the official Community Plugins repository](https://community.obsidian.md) yet.
+The plugin is available in [the official Community Plugins repository](https://community.obsidian.md/plugins/hotkey-cleaner).
 
 ### Beta versions
 
