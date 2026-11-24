@@ -70,10 +70,10 @@ describe('Review stale hotkeys', () => {
     const result = await evalInObsidian({
       callback: async ({ app, lib: { waitUntil } }) => {
         app.commands.executeCommandById('hotkey-cleaner:review-stale-hotkeys');
-        function getNotice(): string | undefined {
-          return [...activeDocument.querySelectorAll('.notice')].map((element) => element.textContent).find((text) => text.includes('Every hotkey binding'));
+        function getNotice(): null | string {
+          return [...activeDocument.querySelectorAll('.notice')].map((element) => element.textContent).find((text) => text.includes('Every hotkey binding')) ?? null;
         }
-        await waitUntil({ predicate: () => getNotice() !== undefined, timeoutInMilliseconds: 5000 });
+        await waitUntil({ predicate: () => getNotice() !== null, timeoutInMilliseconds: 5000 });
         return { hasModal: activeDocument.querySelector('.hotkey-cleaner-modal') !== null, notice: getNotice() };
       },
       vaultPath: getTemporaryVault().path
