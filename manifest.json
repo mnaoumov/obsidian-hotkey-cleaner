@@ -5,7 +5,7 @@
   "fundingUrl": "https://www.buymeacoffee.com/mnaoumov",
   "id": "hotkey-cleaner",
   "isDesktopOnly": false,
-  "minAppVersion": "1.15.0",
+  "minAppVersion": "1.15.1",
   "name": "Hotkey Cleaner",
-  "version": "0.1.0"
+  "version": "1.0.0"
 }
