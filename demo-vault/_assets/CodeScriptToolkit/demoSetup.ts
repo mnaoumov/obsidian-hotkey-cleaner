@@ -61,9 +61,9 @@ export async function removePlantedHotkeys(app: App): Promise<void> {
  * change applies live -- no window reload, and no writing `data.json` behind a running plugin's back, which
  * it would overwrite from memory as it unloads.
  *
- * Manual equivalent: the **Check on startup** toggle in **Settings -> Community plugins -> Hotkey Cleaner**.
+ * Manual equivalent: the **Check on startup** toggle in **Settings -> Community plugins -> `Hotkey Cleaner`**.
  */
-export async function setCheckOnStartup(app: App, value: boolean): Promise<void> {
-  await configureCommunityPlugin({ app, pluginId: PLUGIN_ID, settings: { shouldCheckOnStartup: value } });
-  new Notice(`shouldCheckOnStartup is now ${String(value)}. It is live -- no reload needed.`);
+export async function setCheckOnStartup(app: App, shouldCheckOnStartup: boolean): Promise<void> {
+  await configureCommunityPlugin({ app, pluginId: PLUGIN_ID, settings: { shouldCheckOnStartup } });
+  new Notice(`shouldCheckOnStartup is now ${String(shouldCheckOnStartup)}. It is live -- no reload needed.`);
 }

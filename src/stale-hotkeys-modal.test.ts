@@ -56,10 +56,9 @@ const STALE_HOTKEYS: StaleHotkey[] = [
 ];
 
 function createModal(onApply: (decisions: HotkeyDecision[]) => Promise<void>): StaleHotkeysModal {
-  const names: Record<string, string> = { 'live:command': 'Live', 'ocst:new': 'New' };
   return new StaleHotkeysModal({
     app: App.createConfigured__().asOriginalType__(),
-    getCommandName: (commandId) => names[commandId],
+    commandNames: new Map([['live:command', 'Live'], ['ocst:new', 'New']]),
     onApply,
     staleHotkeys: STALE_HOTKEYS
   });
@@ -96,7 +95,7 @@ describe('StaleHotkeysModal', () => {
     expect(text).toContain('Alt + C is also bound to nameless:command.');
     expect(text).toContain('ocst:old (CodeScript Toolkit)');
     const successorSelect = modal.contentEl.querySelectorAll('select')[1];
-    expect([...successorSelect?.options ?? []].map((option) => option.text)).toEqual(['Keep', 'Remove', 'Move to New (ocst:new)']);
+    expect([...(successorSelect?.options ?? [])].map((option) => option.text)).toEqual(['Keep', 'Remove', 'Move to New (ocst:new)']);
   });
 
   it('applies the choices made in the dropdowns and closes', () => {

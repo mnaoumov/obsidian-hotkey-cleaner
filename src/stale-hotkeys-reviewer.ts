@@ -86,10 +86,9 @@ export class StaleHotkeysReviewer {
       return null;
     }
 
-    const commandNames = new Map(input.registeredCommands.map((command) => [command.id, command.name]));
     const modal = new StaleHotkeysModal({
       app: this.app,
-      getCommandName: (commandId): string | undefined => commandNames.get(commandId),
+      commandNames: new Map(input.registeredCommands.map((command) => [command.id, command.name])),
       onApply: async (decisions): Promise<void> => {
         await this.applyDecisions(staleHotkeys, decisions);
       },

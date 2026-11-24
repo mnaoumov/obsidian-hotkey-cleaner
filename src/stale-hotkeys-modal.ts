@@ -27,7 +27,7 @@ const REASON_TEXTS: Readonly<Record<StaleHotkeyReason, string>> = {
 
 interface StaleHotkeysModalConstructorParams {
   readonly app: App;
-  readonly getCommandName: (commandId: string) => string | undefined;
+  readonly commandNames: ReadonlyMap<string, string>;
   readonly onApply: (decisions: HotkeyDecision[]) => Promise<void>;
   readonly staleHotkeys: readonly StaleHotkey[];
 }
@@ -48,13 +48,13 @@ class StaleHotkeyRow {
  * Apply is pressed.
  */
 export class StaleHotkeysModal extends Modal {
-  private readonly getCommandName: (commandId: string) => string | undefined;
+  private readonly commandNames: ReadonlyMap<string, string>;
   private readonly onApply: (decisions: HotkeyDecision[]) => Promise<void>;
   private readonly rows: readonly StaleHotkeyRow[];
 
   public constructor(params: StaleHotkeysModalConstructorParams) {
     super(params.app);
-    this.getCommandName = params.getCommandName;
+    this.commandNames = params.commandNames;
     this.onApply = params.onApply;
     this.rows = params.staleHotkeys.map((staleHotkey) => new StaleHotkeyRow(staleHotkey));
   }
@@ -99,7 +99,7 @@ export class StaleHotkeysModal extends Modal {
   }
 
   private getCommandLabel(commandId: string): string {
-    const name = this.getCommandName(commandId);
+    const name = this.commandNames.get(commandId);
     return name ? `${name} (${commandId})` : commandId;
   }
 

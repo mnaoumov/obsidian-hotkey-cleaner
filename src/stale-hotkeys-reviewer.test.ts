@@ -75,7 +75,7 @@ describe('StaleHotkeysReviewer', () => {
     const modal = fixture.reviewer.review();
     expect(modal?.contentEl.textContent).toContain('3 hotkey binding(s)');
     expect(modal?.contentEl.textContent).toContain('ocst:new-command (CodeScript Toolkit)');
-    const options = [...modal?.contentEl.querySelectorAll('option') ?? []].map((option) => option.text);
+    const options = [...(modal?.contentEl.querySelectorAll('option') ?? [])].map((option) => option.text);
     expect(options).toContain('Move to New (ocst:new)');
 
     await fixture.reviewer.applyDecisions(fixture.reviewer.findStaleHotkeys(), [
@@ -92,7 +92,7 @@ describe('StaleHotkeysReviewer', () => {
   it('applies through the modal Apply button', async () => {
     const fixture = createFixture({ 'quickadd:run': [ALT_C] });
     const modal = fixture.reviewer.review();
-    const apply = [...modal?.contentEl.querySelectorAll('button') ?? []].find((button) => button.textContent === 'Apply');
+    const apply = [...(modal?.contentEl.querySelectorAll('button') ?? [])].find((button) => button.textContent === 'Apply');
     apply?.click();
     await vi.waitFor(() => {
       expect(fixture.notices).toEqual(['Removed 1 and moved 0 stale hotkey binding(s).']);
