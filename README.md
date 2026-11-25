@@ -28,17 +28,14 @@ A copy of the vault ships with every release. You can access it via any of the f
 
 [My other Obsidian resources](https://mnaoumov.dev/obsidian/)
 
-<!-- Before publishing, search the community plugin directory (https://community.obsidian.md/plugins) and GitHub for similar plugins. Replace the null form below with a table when candidates exist. Sort rows alphabetically by plugin display name; link listed plugins to the store and unlisted ones to their repository. Add (my plugin) or (maintained by me) after the link where applicable. -->
-<!-- Use these columns: Plugin | Features | How `Hotkey Cleaner` differs. Keep cells short, with semicolon-separated fragments. Start each difference with the relationship to the other plugin, then what this one adds or omits. Use Supersedes for a retired or fully covered plugin, Extends for an active plugin it builds on, or a concrete relation such as Same goal as or Narrower than. -->
-<!-- Close a populated table with "Last searched for similar plugins on YYYY-MM-DD." When the search finds nothing, keep the sentence below and replace its date. The resources link stays first in either case. -->
-
 | Plugin | Features | How `Hotkey Cleaner` differs |
 | --- | --- | --- |
-| [Hotkey Helper](https://community.obsidian.md/plugins/hotkey-helper) | Hotkey and settings buttons on plugin tabs; counts of assigned and conflicting hotkeys | Complements it; sees bindings to commands that no longer exist, which Hotkey Helper never counts |
-| [Hotkeys Cheatsheet](https://community.obsidian.md/plugins/hotkeys-cheatsheet) | Lists every hotkey, grouped by plugin | Narrower than it; flags the stale entries it lists under their raw ids, and removes or moves them |
-| [Keyboard Analyzer](https://community.obsidian.md/plugins/keyboard-analyzer) | Visual keyboard; duplicate detection; hotkey editor | Complements it; works on bindings whose command is gone, which its command index cannot see |
+| [`Advanced Hotkeys`](https://github.com/z10n-dev/obsidian-advanced-hotkeys) | Custom hotkeys for any command; override default hotkeys; export and import hotkey configurations | Complements it; removes or moves bindings whose command is gone instead of adding new ones; no export or import |
+| [`Hotkey Helper`](https://community.obsidian.md/plugins/hotkey-helper) | Hotkey and settings buttons on plugin tabs; counts of assigned and conflicting hotkeys | Complements it; sees bindings to commands that no longer exist, which `Hotkey Helper` never counts |
+| [`Hotkeys Cheatsheet`](https://community.obsidian.md/plugins/hotkeys-cheatsheet) | Searchable cheatsheet of assigned hotkeys; conflict and modified-from-default filters; export as a note or HTML | Complements it; lists only the bindings that cannot fire, and removes or moves them |
+| [`Keyboard Analyzer`](https://community.obsidian.md/plugins/keyboard-analyzer) | Visual keyboard; duplicate detection; hotkey editor | Complements it; works on bindings whose command is gone, which its command index cannot see |
 
-Last searched for similar plugins on 2026-10-31.
+Last searched for similar plugins on 2026-11-24.
 
 ## Installation
 
